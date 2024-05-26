@@ -42,7 +42,3 @@ Design Overview Task Bucket will consist of the following core pages/windows:
 ![WhatsApp Image 2024-05-26 at 04 18 49](https://github.com/Dannysyed/TaskBucket/assets/95587269/97c4e0cb-6eea-4179-8bf9-ac0ec6cce711)
 
 
-
-To run this project locally, follow these steps:
-
-1. Clone the repository:
