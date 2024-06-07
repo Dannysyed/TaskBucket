@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const userRoutes = require("./routes/users");
 const taskRoutes = require("./routes/tasks");
 const projectRoutes = require("./routes/projects");
+const authRoutes = require("./routes/auth");
 const app = express();
 const port = 3000;
 
@@ -31,7 +32,7 @@ mongoose
 app.use("/users", userRoutes);
 app.use("/tasks", taskRoutes);
 app.use("/projects", projectRoutes);
-
+app.use("/auth", authRoutes);
 app.get("/", (req, res) => {
   res.send("Task Management System API");
 });
