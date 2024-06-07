@@ -56,7 +56,7 @@ export default function LoginPage() {
         console.log("Login successful:", data);
         // Store token in localStorage or state
         localStorage.setItem("token", data.token);
-        navigate("/dashboard"); // Redirect to a protected route
+        navigate("/homepage"); // Redirect to a protected route
       } catch (error) {
         setBackendError(error.message || "Invalid login credentials");
       }
