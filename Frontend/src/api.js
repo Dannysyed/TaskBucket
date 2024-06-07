@@ -4,8 +4,12 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 // Register a new user
 export const registerUser = async (userData) => {
+  console.log(userData, "asd");
   try {
-    const response = await axios.post(`${API_URL}/auth/register`, userData);
+    const response = await axios.post(
+      `http://localhost:3001/auth/register`,
+      userData
+    );
     return response.data;
   } catch (error) {
     throw error.response.data;
