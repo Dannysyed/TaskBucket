@@ -6,12 +6,13 @@ const userRoutes = require("./routes/users");
 const taskRoutes = require("./routes/tasks");
 const projectRoutes = require("./routes/projects");
 const authRoutes = require("./routes/auth");
+const cors = require("cors");
 const app = express();
-const port = 3000;
+const port = 3001;
 
 // Middleware
 app.use(bodyParser.json());
-
+app.use(cors());
 // Connect to MongoDB
 mongoose
   .connect(
