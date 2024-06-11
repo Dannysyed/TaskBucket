@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 const auth = require("../middleware/auth");
 
-// Get all users
+// Get each user
 router.get("/", auth, async (req, res) => {
   try {
     const users = await User.find();
@@ -13,7 +13,7 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-// Get a user by ID
+// Get a particular user by ID
 router.get("/:id", auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -26,7 +26,7 @@ router.get("/:id", auth, async (req, res) => {
   }
 });
 
-// Update a user by ID
+// Update a particular user by ID
 router.put("/:id", auth, async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
@@ -42,7 +42,7 @@ router.put("/:id", auth, async (req, res) => {
   }
 });
 
-// Delete a user by ID
+// Delete a particular user by ID
 router.delete("/:id", auth, async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);

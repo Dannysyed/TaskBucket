@@ -60,7 +60,7 @@ export default function SignupPage() {
     valid = false;
   }
   
-    // Validation for email field
+    // Validation for the email field
     if (!email.trim()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -75,7 +75,7 @@ export default function SignupPage() {
       valid = false;
     }
   
-    // Validation for password field
+    // Validation for the password field
     if (!password.trim()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -90,7 +90,7 @@ export default function SignupPage() {
       valid = false;
     }
   
-    // Validation for confirmPassword field
+    // Validation for the confirmPassword field
     if (!confirmPassword.trim()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -105,7 +105,7 @@ export default function SignupPage() {
       valid = false;
     }
   
-    // Validation for terms checkbox
+    // Validation for terms and conditions
     if (!terms) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -123,7 +123,7 @@ export default function SignupPage() {
           role: userType,
         });
         console.log("Signup successful:", data);
-        // Redirect to login page or dashboard after successful signup
+        // Redirect to the dashboard after successful registration
         navigate("/homepage");
       } catch (error) {
         setBackendError(error.message || "An error occurred during signup");
@@ -136,7 +136,6 @@ export default function SignupPage() {
     <div className="flex flex-col lg:flex-row justify-around items-center min-h-screen bg-gray-100 p-6 lg:p-12">
       <div className="flex flex-col items-center mb-6 lg:mb-0">
         <img src={""} alt="Task Bucket Logo" className="w-40 h-40 mb-4" />{" "}
-        {/* Update with the correct path to your logo image */}
         <h1 className="text-4xl font-bold">Task Bucket</h1>
       </div>
       <div className="bg-white px-10 py-8 rounded-3xl shadow-lg w-full lg:w-3/5 xl:w-2/5">

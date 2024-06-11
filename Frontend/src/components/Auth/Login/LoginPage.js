@@ -26,12 +26,12 @@ export default function LoginPage() {
     event.preventDefault();
     let valid = true;
 
-    // Reset errors
+    // Reset the errors 
     setErrors({ email: "", password: "" });
     setBackendError("");
 
     
-    // Validation for email field
+    // Validation for the email field
     if (!email.trim()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -46,7 +46,7 @@ export default function LoginPage() {
       valid = false;
     }
   
-    // Validation for password field
+    // Validation for the password field
     if (!password.trim()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -69,9 +69,9 @@ export default function LoginPage() {
           name: "user",
         });
         console.log("Login successful:", data);
-        // Store token in localStorage or state
+        // Store token in localStorage 
         localStorage.setItem("token", data.token);
-        navigate("/homepage"); // Redirect to a protected route
+        navigate("/homepage"); // Redirect to the dashboard
       } catch (error) {
         setBackendError(error.message || "Invalid login credentials");
       }
@@ -82,7 +82,6 @@ export default function LoginPage() {
     <div className="flex flex-col lg:flex-row justify-around items-center min-h-screen bg-gray-100 p-6 lg:p-12">
       <div className="flex flex-col items-center mb-6 lg:mb-0">
         <img src={""} alt="Task Bucket Logo" className="w-40 h-40 mb-4" />{" "}
-        {/* Update with the correct path to your logo image */}
         <h1 className="text-4xl font-bold">Task Bucket</h1>
       </div>
       <div className="bg-white px-10 py-8 rounded-3xl shadow-lg w-full lg:w-3/5 xl:w-2/5">

@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
-// Register a new user
+// Register new user
 router.post("/register", async (req, res) => {
   try {
     const user = new User(req.body);
@@ -15,7 +15,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Login a user
+// A user can Login
 router.post("/login", async (req, res) => {
   try {
     const user = await User.findByCredentials(
