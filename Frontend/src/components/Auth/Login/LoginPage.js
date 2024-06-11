@@ -30,15 +30,30 @@ export default function LoginPage() {
     setErrors({ email: "", password: "" });
     setBackendError("");
 
-    if (!validateEmail(email)) {
+    
+    // Validation for email field
+    if (!email.trim()) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        email: "Email is required",
+      }));
+      valid = false;
+    } else if (!validateEmail(email)) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         email: "Invalid email address",
       }));
       valid = false;
     }
-
-    if (!validatePassword(password)) {
+  
+    // Validation for password field
+    if (!password.trim()) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        password: "Password is required",
+      }));
+      valid = false;
+    } else if (!validatePassword(password)) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         password: "Password must be at least 6 characters",
