@@ -30,15 +30,30 @@ export default function LoginPage() {
     setErrors({ email: "", password: "" });
     setBackendError("");
 
-    if (!validateEmail(email)) {
+    
+    // Validation for email field
+    if (!email.trim()) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        email: "Email is required",
+      }));
+      valid = false;
+    } else if (!validateEmail(email)) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         email: "Invalid email address",
       }));
       valid = false;
     }
-
-    if (!validatePassword(password)) {
+  
+    // Validation for password field
+    if (!password.trim()) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        password: "Password is required",
+      }));
+      valid = false;
+    } else if (!validatePassword(password)) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         password: "Password must be at least 6 characters",
@@ -64,16 +79,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-row  justify-around items-center min-h-screen bg-gray-100">
-      <div className="flex flex-col items-center">
-        <img src={""} alt="Logo" className="w-40 h-40 mb-4" />{" "}
+    <div className="flex flex-col lg:flex-row justify-around items-center min-h-screen bg-gray-100 p-6 lg:p-12">
+      <div className="flex flex-col items-center mb-6 lg:mb-0">
+        <img src={""} alt="Task Bucket Logo" className="w-40 h-40 mb-4" />{" "}
         {/* Update with the correct path to your logo image */}
         <h1 className="text-4xl font-bold">Task Bucket</h1>
       </div>
-      <div className="bg-white px-10 py-20 rounded-3xl shadow-lg w-full max-w-md">
-        <h1 className="text-3xl font-semibold text-center mt-6">
-          Welcome Back!
-        </h1>
+      <div className="bg-white px-10 py-8 rounded-3xl shadow-lg w-full lg:w-3/5 xl:w-2/5">
+        <h1 className="text-3xl font-semibold text-center mt-6">Welcome Back!</h1>
         <p className="font-medium text-lg text-gray-500 mt-2 text-center">
           Please enter your details
         </p>
@@ -95,10 +108,7 @@ export default function LoginPage() {
             )}
           </div>
           <div className="mb-6">
-            <label
-              className="block text-lg font-medium mb-2"
-              htmlFor="password"
-            >
+            <label className="block text-lg font-medium mb-2" htmlFor="password">
               Password
             </label>
             <input
@@ -114,9 +124,7 @@ export default function LoginPage() {
             )}
           </div>
           {backendError && (
-            <p className="text-red-500 text-sm mt-4 text-center">
-              {backendError}
-            </p>
+            <p className="text-red-500 text-sm mt-4 text-center">{backendError}</p>
           )}
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center">
@@ -130,10 +138,7 @@ export default function LoginPage() {
                 Remember for 30 days
               </label>
             </div>
-            <button
-              type="button"
-              className="font-medium text-base text-violet-500"
-            >
+            <button type="button" className="font-medium text-base text-violet-500">
               Forgot Password
             </button>
           </div>
