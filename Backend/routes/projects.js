@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Project = require("../models/Project");
 
-// Create a new project
+// Create a project
 router.post("/", async (req, res) => {
   try {
     const project = new Project(req.body);
@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Get all projects
+// Retrieve all projects
 router.get("/", async (req, res) => {
   try {
     const projects = await Project.find().populate("owner");
@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Get a project by ID
+// Retrieve a project by ID
 router.get("/:id", async (req, res) => {
   try {
     const project = await Project.findById(req.params.id).populate("owner");

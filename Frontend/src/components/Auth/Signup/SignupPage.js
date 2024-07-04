@@ -10,6 +10,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [terms, setTerms] = useState(false);
+  const [userType, setUserType] = useState("User");
   const [errors, setErrors] = useState({
     email: "",
     password: "",
@@ -17,7 +18,12 @@ export default function SignupPage() {
     terms: "",
   });
   const [backendError, setBackendError] = useState("");
-
+  
+  const validateName = (name) => {
+    const nameRegex = /^[a-zA-Z\s-]*$/;
+    return nameRegex.test(name);
+  };
+  
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -34,34 +40,72 @@ export default function SignupPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     let valid = true;
-
-    setErrors({ email: "", password: "", confirmPassword: "", terms: "" });
+  
+    setErrors({ email: "", name: "", password: "", confirmPassword: "", terms: "" });
     setBackendError("");
-
-    if (!validateEmail(email)) {
+  
+    // Validation for name field
+    if (!name.trim()) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        name: "Name is required",
+      }));
+      valid = false;
+    }
+    else if (!validateName(name)) {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      name: "Invalid name (only letters, spaces, and hyphens are allowed)",
+    }));
+    valid = false;
+  }
+  
+    // Validation for the email field
+    if (!email.trim()) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        email: "Email is required",
+      }));
+      valid = false;
+    } else if (!validateEmail(email)) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         email: "Invalid email address",
       }));
       valid = false;
     }
-
-    if (!validatePassword(password)) {
+  
+    // Validation for the password field
+    if (!password.trim()) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        password: "Password is required",
+      }));
+      valid = false;
+    } else if (!validatePassword(password)) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         password: "Password must be at least 6 characters",
       }));
       valid = false;
     }
-
-    if (password !== confirmPassword) {
+  
+    // Validation for the confirmPassword field
+    if (!confirmPassword.trim()) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        confirmPassword: "Confirm Password is required",
+      }));
+      valid = false;
+    } else if (password !== confirmPassword) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         confirmPassword: "Passwords do not match",
       }));
       valid = false;
     }
-
+  
+    // Validation for terms and conditions
     if (!terms) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -69,31 +113,32 @@ export default function SignupPage() {
       }));
       valid = false;
     }
-
+  
     if (valid) {
       try {
         const data = await registerUser({
           email: email,
           password: password,
-          name: "User",
+          name: name,
+          role: userType,
         });
         console.log("Signup successful:", data);
-        // Redirect to login page or dashboard after successful signup
+        // Redirect to the dashboard after successful registration
         navigate("/homepage");
       } catch (error) {
         setBackendError(error.message || "An error occurred during signup");
       }
     }
   };
+  
 
   return (
-    <div className="flex flex-row justify-around items-center min-h-screen bg-gray-100">
-      <div className="flex flex-col items-center">
+    <div className="flex flex-col lg:flex-row justify-around items-center min-h-screen bg-gray-100 p-6 lg:p-12">
+      <div className="flex flex-col items-center mb-6 lg:mb-0">
         <img src={""} alt="Task Bucket Logo" className="w-40 h-40 mb-4" />{" "}
-        {/* Update with the correct path to your logo image */}
         <h1 className="text-4xl font-bold">Task Bucket</h1>
       </div>
-      <div className="bg-white px-10 py-6 rounded-3xl shadow-lg w-full max-w-md">
+      <div className="bg-white px-10 py-8 rounded-3xl shadow-lg w-full lg:w-3/5 xl:w-2/5">
         <h1 className="text-3xl font-semibold text-center mt-6">
           Create your account
         </h1>
@@ -101,6 +146,22 @@ export default function SignupPage() {
           Please enter your details
         </p>
         <form className="mt-8" onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-lg font-medium mb-2" htmlFor="name">
+              Name
+            </label>
+            <input
+              id="name"
+              className="w-full border-2 border-gray-200 rounded-xl p-4 mt-1 bg-white focus:border-violet-500 focus:outline-none"
+              placeholder="Enter your name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+            )}
+          </div>
           <div className="mb-4">
             <label className="block text-lg font-medium mb-2" htmlFor="email">
               Email
@@ -116,6 +177,20 @@ export default function SignupPage() {
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
+          </div>
+          <div className="mb-4">
+            <label className="block text-lg font-medium mb-2" htmlFor="user-type">
+              User Type
+            </label>
+            <select
+              id="user-type"
+              className="w-full border-2 border-gray-200 rounded-xl p-4 mt-1 bg-white focus:border-violet-500 focus:outline-none"
+              value={userType}
+              onChange={(e) => setUserType(e.target.value)}
+            >
+              <option value="User">User</option>
+              <option value="Admin">Admin</option>
+            </select>
           </div>
           <div className="mb-4">
             <label
