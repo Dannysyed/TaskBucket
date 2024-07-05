@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../../api";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -26,12 +27,11 @@ export default function LoginPage() {
     event.preventDefault();
     let valid = true;
 
-    // Reset the errors 
+    // Reset errors
     setErrors({ email: "", password: "" });
     setBackendError("");
 
-    
-    // Validation for the email field
+    // Validate email
     if (!email.trim()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -45,8 +45,8 @@ export default function LoginPage() {
       }));
       valid = false;
     }
-  
-    // Validation for the password field
+
+    // Validate password
     if (!password.trim()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -69,9 +69,9 @@ export default function LoginPage() {
           name: "user",
         });
         console.log("Login successful:", data);
-        // Store token in localStorage 
-        localStorage.setItem("token", data.token);
-        navigate("/homepage"); // Redirect to the dashboard
+        // Store token in cookies
+        Cookies.set("token", data.token, { expires: 1 }); // Expires in 1 day
+        navigate("/homepage"); // Redirect to the homepage
       } catch (error) {
         setBackendError(error.message || "Invalid login credentials");
       }
@@ -81,11 +81,13 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col lg:flex-row justify-around items-center min-h-screen bg-gray-100 p-6 lg:p-12">
       <div className="flex flex-col items-center mb-6 lg:mb-0">
-        <img src={""} alt="Task Bucket Logo" className="w-40 h-40 mb-4" />{" "}
+        <img src={""} alt="Task Bucket Logo" className="w-40 h-40 mb-4" />
         <h1 className="text-4xl font-bold">Task Bucket</h1>
       </div>
       <div className="bg-white px-10 py-8 rounded-3xl shadow-lg w-full lg:w-3/5 xl:w-2/5">
-        <h1 className="text-3xl font-semibold text-center mt-6">Welcome Back!</h1>
+        <h1 className="text-3xl font-semibold text-center mt-6">
+          Welcome Back!
+        </h1>
         <p className="font-medium text-lg text-gray-500 mt-2 text-center">
           Please enter your details
         </p>
@@ -107,7 +109,10 @@ export default function LoginPage() {
             )}
           </div>
           <div className="mb-6">
-            <label className="block text-lg font-medium mb-2" htmlFor="password">
+            <label
+              className="block text-lg font-medium mb-2"
+              htmlFor="password"
+            >
               Password
             </label>
             <input
@@ -123,7 +128,9 @@ export default function LoginPage() {
             )}
           </div>
           {backendError && (
-            <p className="text-red-500 text-sm mt-4 text-center">{backendError}</p>
+            <p className="text-red-500 text-sm mt-4 text-center">
+              {backendError}
+            </p>
           )}
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center">
@@ -137,7 +144,10 @@ export default function LoginPage() {
                 Remember for 30 days
               </label>
             </div>
-            <button type="button" className="font-medium text-base text-violet-500">
+            <button
+              type="button"
+              className="font-medium text-base text-violet-500"
+            >
               Forgot Password
             </button>
           </div>
@@ -172,24 +182,24 @@ export default function LoginPage() {
                   fill="#4A90E2"
                 />
                 <path
-                  d="M5.27698 14.2663C5.03833 13.5547 4.90909 12.7922 4.90909 11.9984C4.90909 11.2167 5.03444 10.4652 5.2662 9.76294L1.23999 6.64844C0.436587 8.25884 0 10.0738 0 11.9984C0 13.918 0.444781 15.7286 1.23746 17.3334L5.27698 14.2663Z"
+                  d="M5.27698 14.2663C5.03833 13.5547 4.90909 12.7922 4.90909 11.9984C4.90909 11.2167 5.03444 10.4652 5.2662 9.76294L1.23999 6.64844C0.436587 8.25884 0 10.0738 0 11.9984C0 13.918 0.444781 15.7286 1.23744 17.3353L5.27698 14.2663Z"
                   fill="#FBBC05"
                 />
               </svg>
               Sign in with Google
             </button>
           </div>
-          <div className="mt-8 flex justify-center items-center">
-            <p className="font-medium text-base">Don't have an account?</p>
-            <button
-              type="button"
-              onClick={handleSignUpClick}
-              className="ml-2 font-medium text-base text-violet-500"
-            >
-              Sign up
-            </button>
-          </div>
         </form>
+        <div className="mt-6 flex justify-center items-center">
+          <p className="font-medium text-base">Don't have an account?</p>
+          <button
+            type="button"
+            onClick={handleSignUpClick}
+            className="ml-2 font-medium text-base text-violet-500"
+          >
+            Sign up
+          </button>
+        </div>
       </div>
     </div>
   );
