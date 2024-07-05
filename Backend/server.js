@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-// Routes import
+// import the routes
 const userRoutes = require("./routes/users");
 const taskRoutes = require("./routes/tasks");
 const projectRoutes = require("./routes/projects");
@@ -13,7 +13,7 @@ const port = 3001;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
-// Connect to MongoDB
+// Connect to the MongoDB (database)
 mongoose
   .connect(
     "mongodb+srv://danny:1234@cluster0.tqjlbig.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/taskbucket",

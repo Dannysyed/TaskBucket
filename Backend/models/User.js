@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ["Admin", "User"], default: "User" },
 });
 
-// Hash the password before saving
+// Store hashed password
 userSchema.pre("save", async function (next) {
   const user = this;
   if (user.isModified("password")) {
@@ -18,7 +18,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// Validate user credentials
+// The user's credentials are authenticated
 userSchema.statics.findByCredentials = async (email, password) => {
   console.log(email, password);
   const user = await User.findOne({ email });
@@ -32,7 +32,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
   return user;
 };
 
-// Generate JWT token
+// Way to generate JWT token
 userSchema.methods.generateAuthToken = function () {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, "your_secret_key", {
