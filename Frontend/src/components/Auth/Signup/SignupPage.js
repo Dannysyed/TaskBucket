@@ -7,7 +7,7 @@ export default function SignupPage() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("asdas");
+  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [terms, setTerms] = useState(false);
   const [userType, setUserType] = useState("User");
@@ -18,12 +18,12 @@ export default function SignupPage() {
     terms: "",
   });
   const [backendError, setBackendError] = useState("");
-  
+
   const validateName = (name) => {
     const nameRegex = /^[a-zA-Z\s-]*$/;
     return nameRegex.test(name);
   };
-  
+
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -40,10 +40,16 @@ export default function SignupPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     let valid = true;
-  
-    setErrors({ email: "", name: "", password: "", confirmPassword: "", terms: "" });
+
+    setErrors({
+      email: "",
+      name: "",
+      password: "",
+      confirmPassword: "",
+      terms: "",
+    });
     setBackendError("");
-  
+
     // Validation for name field
     if (!name.trim()) {
       setErrors((prevErrors) => ({
@@ -51,15 +57,14 @@ export default function SignupPage() {
         name: "Name is required",
       }));
       valid = false;
+    } else if (!validateName(name)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        name: "Invalid name (only letters, spaces, and hyphens are allowed)",
+      }));
+      valid = false;
     }
-    else if (!validateName(name)) {
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      name: "Invalid name (only letters, spaces, and hyphens are allowed)",
-    }));
-    valid = false;
-  }
-  
+
     // Validation for the email field
     if (!email.trim()) {
       setErrors((prevErrors) => ({
@@ -74,7 +79,7 @@ export default function SignupPage() {
       }));
       valid = false;
     }
-  
+
     // Validation for the password field
     if (!password.trim()) {
       setErrors((prevErrors) => ({
@@ -89,7 +94,7 @@ export default function SignupPage() {
       }));
       valid = false;
     }
-  
+
     // Validation for the confirmPassword field
     if (!confirmPassword.trim()) {
       setErrors((prevErrors) => ({
@@ -104,7 +109,7 @@ export default function SignupPage() {
       }));
       valid = false;
     }
-  
+
     // Validation for terms and conditions
     if (!terms) {
       setErrors((prevErrors) => ({
@@ -113,7 +118,7 @@ export default function SignupPage() {
       }));
       valid = false;
     }
-  
+
     if (valid) {
       try {
         const data = await registerUser({
@@ -130,29 +135,28 @@ export default function SignupPage() {
       }
     }
   };
-  
 
   return (
-    <div className="flex flex-col lg:flex-row justify-around items-center min-h-screen bg-gray-100 p-6 lg:p-12">
+    <div className="flex flex-col lg:flex-row justify-around items-center min-h-screen bg-gray-900 p-6 lg:p-12">
       <div className="flex flex-col items-center mb-6 lg:mb-0">
-        <img src={""} alt="Task Bucket Logo" className="w-40 h-40 mb-4" />{" "}
-        <h1 className="text-4xl font-bold">Task Bucket</h1>
+        <img src={"logo.png"} alt="Task Bucket Logo" className="w-40 h-40 mb-4" />
+        <h1 className="text-4xl font-bold text-white">Task Bucket</h1>
       </div>
-      <div className="bg-white px-10 py-8 rounded-3xl shadow-lg w-full lg:w-3/5 xl:w-2/5">
-        <h1 className="text-3xl font-semibold text-center mt-6">
+      <div className="bg-gray-800 px-10 py-8 rounded-3xl shadow-lg w-full lg:w-3/5 xl:w-2/5">
+        <h1 className="text-3xl font-semibold text-center mt-6 text-white">
           Create your account
         </h1>
-        <p className="font-medium text-lg text-gray-500 mt-2 text-center">
+        <p className="font-medium text-lg text-gray-400 mt-2 text-center">
           Please enter your details
         </p>
         <form className="mt-8" onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-lg font-medium mb-2" htmlFor="name">
+            <label className="block text-lg font-medium mb-2 text-white" htmlFor="name">
               Name
             </label>
             <input
               id="name"
-              className="w-full border-2 border-gray-200 rounded-xl p-4 mt-1 bg-white focus:border-violet-500 focus:outline-none"
+              className="w-full border-2 border-gray-600 rounded-xl p-4 mt-1 bg-gray-700 text-white focus:border-violet-500 focus:outline-none"
               placeholder="Enter your name"
               type="text"
               value={name}
@@ -163,12 +167,12 @@ export default function SignupPage() {
             )}
           </div>
           <div className="mb-4">
-            <label className="block text-lg font-medium mb-2" htmlFor="email">
+            <label className="block text-lg font-medium mb-2 text-white" htmlFor="email">
               Email
             </label>
             <input
               id="email"
-              className="w-full border-2 border-gray-200 rounded-xl p-4 mt-1 bg-white focus:border-violet-500 focus:outline-none"
+              className="w-full border-2 border-gray-600 rounded-xl p-4 mt-1 bg-gray-700 text-white focus:border-violet-500 focus:outline-none"
               placeholder="Enter your email"
               type="email"
               value={email}
@@ -179,12 +183,12 @@ export default function SignupPage() {
             )}
           </div>
           <div className="mb-4">
-            <label className="block text-lg font-medium mb-2" htmlFor="user-type">
+            <label className="block text-lg font-medium mb-2 text-white" htmlFor="user-type">
               User Type
             </label>
             <select
               id="user-type"
-              className="w-full border-2 border-gray-200 rounded-xl p-4 mt-1 bg-white focus:border-violet-500 focus:outline-none"
+              className="w-full border-2 border-gray-600 rounded-xl p-4 mt-1 bg-gray-700 text-white focus:border-violet-500 focus:outline-none"
               value={userType}
               onChange={(e) => setUserType(e.target.value)}
             >
@@ -193,15 +197,12 @@ export default function SignupPage() {
             </select>
           </div>
           <div className="mb-4">
-            <label
-              className="block text-lg font-medium mb-2"
-              htmlFor="password"
-            >
+            <label className="block text-lg font-medium mb-2 text-white" htmlFor="password">
               Password
             </label>
             <input
               id="password"
-              className="w-full border-2 border-gray-200 rounded-xl p-4 mt-1 bg-white focus:border-violet-500 focus:outline-none"
+              className="w-full border-2 border-gray-600 rounded-xl p-4 mt-1 bg-gray-700 text-white focus:border-violet-500 focus:outline-none"
               placeholder="Enter your password"
               type="password"
               value={password}
@@ -212,24 +213,19 @@ export default function SignupPage() {
             )}
           </div>
           <div className="mb-6">
-            <label
-              className="block text-lg font-medium mb-2"
-              htmlFor="confirm-password"
-            >
+            <label className="block text-lg font-medium mb-2 text-white" htmlFor="confirm-password">
               Confirm Password
             </label>
             <input
               id="confirm-password"
-              className="w-full border-2 border-gray-200 rounded-xl p-4 mt-1 bg-white focus:border-violet-500 focus:outline-none"
+              className="w-full border-2 border-gray-600 rounded-xl p-4 mt-1 bg-gray-700 text-white focus:border-violet-500 focus:outline-none"
               placeholder="Confirm your password"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
             {errors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.confirmPassword}
-              </p>
+              <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
             )}
           </div>
           <div className="flex justify-between items-center mb-6">
@@ -242,7 +238,7 @@ export default function SignupPage() {
                 checked={terms}
                 onChange={(e) => setTerms(e.target.checked)}
               />
-              <label className="font-medium text-base" htmlFor="terms">
+              <label className="font-medium text-base text-white" htmlFor="terms">
                 I agree to the terms and conditions
               </label>
             </div>
@@ -258,13 +254,13 @@ export default function SignupPage() {
           <div className="flex flex-col gap-y-4">
             <button
               type="submit"
-              className="w-full active:scale-[.98] active:duration-75 hover:scale-[1.01] transition-transform py-3 rounded-xl bg-violet-500 text-white text-lg font-bold"
+              className="w-full active:scale              [0.98] active:duration-75 hover:scale-105 transition-transform py-3 rounded-xl bg-violet-500 text-white text-lg font-bold"
             >
               Sign up
             </button>
             <button
               type="button"
-              className="w-full flex items-center justify-center py-3 rounded-xl border-2 border-gray-200 active:scale-[.98] active:duration-75 hover:scale-[1.01] transition-transform gap-2"
+              className="w-full flex items-center justify-center py-3 rounded-xl border-2 border-gray-600 active:scale-[0.98] active:duration-75 hover:scale-105 transition-transform gap-2 text-white"
             >
               <svg
                 width="24"
@@ -294,7 +290,7 @@ export default function SignupPage() {
             </button>
           </div>
           <div className="mt-8 flex justify-center items-center">
-            <p className="font-medium text-base">Already have an account?</p>
+            <p className="font-medium text-base text-white">Already have an account?</p>
             <button
               type="button"
               onClick={handleLoginClick}
