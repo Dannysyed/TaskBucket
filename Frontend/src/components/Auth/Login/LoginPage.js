@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../../api";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../store/userReducer";
+import { setToken } from "../../../store/authReducer";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({ email: "", password: "" });
@@ -69,8 +74,8 @@ export default function LoginPage() {
           name: "user",
         });
         console.log("Login successful:", data);
-        // Store token in localStorage 
-        localStorage.setItem("token", data.token);
+        dispatch(setUser(data.user));
+        dispatch(setToken(data.token));
         navigate("/homepage"); // Redirect to the dashboard
       } catch (error) {
         setBackendError(error.message || "Invalid login credentials");

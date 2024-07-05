@@ -2,9 +2,14 @@ import * as React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../../api"; // Import the API function
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../store/userReducer";
+import { setToken } from "../../../store/authReducer";
 
 export default function SignupPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -123,6 +128,8 @@ export default function SignupPage() {
           role: userType,
         });
         console.log("Signup successful:", data);
+        dispatch(setUser(data.user));
+        dispatch(setToken(data.token));
         // Redirect to the dashboard after successful registration
         navigate("/homepage");
       } catch (error) {
