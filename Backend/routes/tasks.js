@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Task = require("../models/Task");
+const auth = require("../middleware/auth");
 
 // Create a task
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const task = new Task(req.body);
     await task.save();
@@ -14,7 +15,7 @@ router.post("/", async (req, res) => {
 });
 
 // Get each tasks
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
     const tasks = await Task.find().populate("assignedTo");
     res.status(200).send(tasks);
