@@ -1,13 +1,11 @@
-import axios from "axios";
-
-const API_URL = process.env.REACT_APP_API_URL;
+import axiosInstance from "./axios";
 
 // Register a new user
 export const registerUser = async (userData) => {
   console.log(userData, "asd");
   try {
-    const response = await axios.post(
-      `http://localhost:3001/auth/register`,
+    const response = await axiosInstance.post(
+      `auth/register`,
       userData
     );
     return response.data;
@@ -19,8 +17,8 @@ export const registerUser = async (userData) => {
 // Login a user
 export const loginUser = async (credentials) => {
   try {
-    const response = await axios.post(
-      `http://localhost:3001/auth/login`,
+    const response = await axiosInstance.post(
+      `auth/login`,
       credentials
     );
     return response.data;
@@ -30,11 +28,9 @@ export const loginUser = async (credentials) => {
 };
 
 // Example protected route
-export const getUsers = async (token) => {
+export const getUsers = async () => {
   try {
-    const response = await axios.get(`${API_URL}/users`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await axiosInstance.get(`users`);
     return response.data;
   } catch (error) {
     throw error.response.data;
