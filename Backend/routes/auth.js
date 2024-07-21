@@ -29,4 +29,14 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// Get each tasks
+router.get("/tasks", async (req, res) => {
+  try {
+    const tasks = await Task.find().populate("assignedTo");
+    res.status(200).send(tasks);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;
