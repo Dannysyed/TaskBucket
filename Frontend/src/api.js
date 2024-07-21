@@ -101,3 +101,20 @@ export const deleteTask = async (taskId, token) => {
     throw error.response.data;
   }
 };
+export const fetchComments = async (token, taskId) => {
+  const response = await axios.get(`http://localhost:3001/comments/${taskId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const addComment = async (token, taskId, content) => {
+  const response = await axios.post(
+    `http://localhost:3001/comments/${taskId}`,
+    { content },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
+};

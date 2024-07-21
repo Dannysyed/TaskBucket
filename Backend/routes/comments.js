@@ -4,13 +4,22 @@ const Comment = require("../models/Comment");
 const auth = require("../middleware/auth");
 
 // Create a new comment
-router.post("/", auth, async (req, res) => {
+router.post("/:taskId", auth, async (req, res) => {
   try {
-    const comment = new Comment(req.body);
+    const { content, userId } = req.body; // Destructure the necessary fields from the request body
+    const { taskId } = req.params; // Extract taskId from the route parameter
+
+    const comment = new Comment({
+      content,
+      userId,
+      taskId,
+      createdAt: new Date(), // Ensure createdAt is set if it's not handled by the schema
+    });
+
     await comment.save();
     res.status(201).send(comment);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send({ message: "Failed to add comment", error });
   }
 });
 
@@ -24,18 +33,20 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-// Get a comment by ID
-router.get("/:id", auth, async (req, res) => {
+// Get a comment by taskId
+router.get("/:taskId", auth, async (req, res) => {
   try {
-    const comment = await Comment.findById(req.params.id).populate(
-      "userId taskId"
+    const comments = await Comment.find({ taskId: req.params.taskId }).populate(
+      "taskId"
     );
-    if (!comment) {
-      return res.status(404).send();
+    if (!comments.length) {
+      return res
+        .status(404)
+        .send({ message: "No comments found for this task." });
     }
-    res.status(200).send(comment);
+    res.status(200).send(comments);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send({ message: "Server error", error });
   }
 });
 
