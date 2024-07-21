@@ -52,6 +52,19 @@ export const fetchTasks = async (token) => {
     throw error.response.data;
   }
 };
+export const fetchOneTasks = async (token, taskId) => {
+  try {
+    const response = await axios.get(
+      `${"http://localhost:3001"}/tasks/${taskId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
 
 // Create a new task
 export const createTask = async (taskData, token) => {
@@ -87,4 +100,21 @@ export const deleteTask = async (taskId, token) => {
   } catch (error) {
     throw error.response.data;
   }
+};
+export const fetchComments = async (token, taskId) => {
+  const response = await axios.get(`http://localhost:3001/comments/${taskId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const addComment = async (token, taskId, content) => {
+  const response = await axios.post(
+    `http://localhost:3001/comments/${taskId}`,
+    { content },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
 };
