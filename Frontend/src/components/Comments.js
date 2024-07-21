@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 
 function Comments({ taskId }) {
   const [comments, setComments] = useState([]);
+  const [noComment, setNoComment] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newComment, setNewComment] = useState("");
@@ -13,7 +14,11 @@ function Comments({ taskId }) {
     const getComments = async () => {
       try {
         const data = await fetchComments(token, taskId);
-        setComments(data); // Assuming the API returns an array of comment objects
+        if (data.message) {
+          setNoComment("No comments Fouond");
+        } else {
+          setComments(data); // Assuming the API returns an array of comment objects
+        }
       } catch (err) {
         setError(err.message);
       } finally {

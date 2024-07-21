@@ -41,8 +41,8 @@ router.get("/:taskId", auth, async (req, res) => {
     );
     if (!comments.length) {
       return res
-        .status(404)
-        .send({ message: "No comments found for this task." });
+        .status(200)
+        .send({ message: ["No comments found for this task."] });
     }
     res.status(200).send(comments);
   } catch (error) {
