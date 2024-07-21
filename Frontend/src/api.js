@@ -52,6 +52,19 @@ export const fetchTasks = async (token) => {
     throw error.response.data;
   }
 };
+export const fetchOneTasks = async (token, taskId) => {
+  try {
+    const response = await axios.get(
+      `${"http://localhost:3001"}/tasks/${taskId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
 
 // Create a new task
 export const createTask = async (taskData, token) => {

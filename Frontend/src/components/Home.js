@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { fetchTasks, createTask } from "../api";
 import Modal from "./Modal";
 import Sidebar from "./Sidebar";
+import { Link } from "react-router-dom";
 
 function Home() {
   const [tasks, setTasks] = useState([]);
@@ -262,9 +263,7 @@ function Home() {
                 required
               />
               {errors.assignedTo && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.assignedTo}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{errors.assignedTo}</p>
               )}
             </div>
             <button
@@ -338,7 +337,9 @@ function Home() {
             <tbody>
               {filteredTasks.map((task) => (
                 <tr key={task._id} className="border-b hover:bg-gray-100">
-                  <td className="py-3 px-4 border-b">{task.title}</td>
+                  <td className="py-3 px-4 border-b">
+                    <Link to={`/tasks/${task._id}`}>{task.title}</Link>
+                  </td>
                   <td className="py-3 px-4 border-b">{task.description}</td>
                   <td className="py-3 px-4 border-b">{task.status}</td>
                   <td className="py-3 px-4 border-b">{task.priority}</td>
