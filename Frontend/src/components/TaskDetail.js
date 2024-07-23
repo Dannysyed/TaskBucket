@@ -40,10 +40,10 @@ function TaskDetail() {
   }
 
   return (
-    <div className="p-6 h-full mx-auto bg-white shadow-lg rounded-lg flex flex-col lg:flex-row gap-8">
+    <div className="container mx-auto p-6 h-full bg-white shadow-lg rounded-lg flex flex-col lg:flex-row gap-8">
       <div className="flex-1 bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200">
         <button
-          className="bg-gray-200 text-gray-800 py-2 px-4 rounded mb-6 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 transition duration-300"
+          className="bg-blue-500 text-white py-2 px-4 rounded mb-6 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
           onClick={() => navigate(-1)}
         >
           Back
@@ -65,7 +65,7 @@ function TaskDetail() {
           </p>
           <p className="text-gray-800 text-lg">
             <strong>Assigned To:</strong>{" "}
-            {task.assignedTo ? task.assignedTo : "Unassigned"}
+            {task.assignedTo ? task.assignedTo.name : "Unassigned"}
           </p>
           <p className="text-gray-800 text-lg">
             <strong>Created At:</strong>{" "}
