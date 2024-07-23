@@ -74,15 +74,6 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                to="/tasks"
-                className="block py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
-                onClick={closeMenu}
-              >
-                Tasks Detail
-              </Link>
-            </li>
-            <li>
-              <Link
                 to="/calendar"
                 className="block py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
                 onClick={closeMenu}
