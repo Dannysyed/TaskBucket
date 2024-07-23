@@ -30,9 +30,9 @@ export const loginUser = async (credentials) => {
 };
 
 // Example protected route
-export const getUsers = async (token) => {
+export const getUsersAll = async (token) => {
   try {
-    const response = await axios.get(`${API_URL}/users`, {
+    const response = await axios.get(`${"http://localhost:3001"}/users`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -67,11 +67,15 @@ export const fetchOneTasks = async (token, taskId) => {
 };
 
 // Create a new task
-export const createTask = async (taskData, token) => {
+export const createTask = async (token, taskData) => {
   try {
-    const response = await axios.post(`${API_URL}/tasks`, taskData, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await axios.post(
+      `${"http://localhost:3001"}/tasks`,
+      taskData,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response.data;

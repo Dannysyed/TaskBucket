@@ -17,7 +17,7 @@ router.post("/", auth, async (req, res) => {
 // Get each tasks
 router.get("/", auth, async (req, res) => {
   try {
-    const tasks = await Task.find().populate("assignedTo");
+    const tasks = await Task.find();
     res.status(200).send(tasks);
   } catch (error) {
     res.status(500).send(error);
@@ -27,7 +27,7 @@ router.get("/", auth, async (req, res) => {
 // Get a particular task by ID
 router.get("/:id", async (req, res) => {
   try {
-    const task = await Task.findById(req.params.id).populate("assignedTo");
+    const task = await Task.findById(req.params.id);
     if (!task) {
       return res.status(404).send();
     }
