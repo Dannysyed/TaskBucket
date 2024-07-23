@@ -1,7 +1,5 @@
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 // Register a new user
 export const registerUser = async (userData) => {
   console.log(userData, "asd");
@@ -83,11 +81,15 @@ export const createTask = async (token, taskData) => {
 };
 
 // Update an existing task
-export const updateTask = async (taskId, taskData, token) => {
+export const updateTask = async (token, taskId, taskData) => {
   try {
-    const response = await axios.put(`${API_URL}/tasks/${taskId}`, taskData, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await axios.put(
+      `${"http://localhost:3001"}/tasks/${taskId}`,
+      taskData,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -95,11 +97,14 @@ export const updateTask = async (taskId, taskData, token) => {
 };
 
 // Delete a task
-export const deleteTask = async (taskId, token) => {
+export const deleteTask = async (token, taskId) => {
   try {
-    const response = await axios.delete(`${API_URL}/tasks/${taskId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await axios.delete(
+      `${"http://localhost:3001"}/tasks/${taskId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response.data;
