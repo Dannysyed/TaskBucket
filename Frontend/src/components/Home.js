@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { fetchTasks, createTask } from "../api";
+import { fetchTasks, createTask, getUsersAll } from "../api";
 import Modal from "./Modal";
 import Sidebar from "./Sidebar";
 import { Link } from "react-router-dom";
+import { HiPlusCircle } from "react-icons/hi"; // Import an icon for the "Add Task" button
 
 function Home() {
   const [tasks, setTasks] = useState([]);
@@ -22,8 +23,8 @@ function Home() {
   const [statusFilter, setStatusFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [assigneeFilter, setAssigneeFilter] = useState("");
+  const [users, setUsers] = useState([]);
 
-  // Validation state
   const [errors, setErrors] = useState({
     title: "",
     description: "",
@@ -48,6 +49,19 @@ function Home() {
     getTasks();
   }, [token]);
 
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const data = await getUsersAll(token);
+        setUsers(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    getUsers();
+  }, [token]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewTask((prevTask) => ({
@@ -55,7 +69,6 @@ function Home() {
       [name]: value,
     }));
 
-    // Validate each field as it changes
     validateField(name, value);
   };
 
@@ -99,7 +112,6 @@ function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate all fields before submitting
     const formValid = Object.values(errors).every((error) => error === "");
 
     if (!formValid) {
@@ -147,22 +159,24 @@ function Home() {
   });
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p className="text-center text-gray-600">Loading...</p>;
   }
 
   if (error) {
-    return <p>Error: {error}</p>;
+    return <p className="text-center text-red-500">Error: {error}</p>;
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-screen">
+    <div className="flex flex-col md:flex-row h-screen bg-gray-100">
       <Sidebar />
-      <div className="flex-1 p-4 overflow-auto">
-        <div className="mb-4">
+      <div className="flex-1 p-6 overflow-auto">
+        <div className="mb-6 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800">Task Manager</h1>
           <button
-            className="bg-blue-500 text-white py-2 px-4 rounded"
+            className="flex items-center bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
             onClick={() => setIsModalVisible(true)}
           >
+            <HiPlusCircle className="mr-2" />
             Add Task
           </button>
         </div>
@@ -171,16 +185,16 @@ function Home() {
           isVisible={isModalVisible}
           onClose={() => setIsModalVisible(false)}
         >
-          <form onSubmit={handleSubmit}>
-            <div className="mb-2">
-              <label className="block mb-1">Title</label>
+          <form onSubmit={handleSubmit} className="space-y-4 p-4">
+            <div>
+              <label className="block mb-2 font-semibold">Title</label>
               <input
                 type="text"
                 name="title"
                 value={newTask.title}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded ${
-                  errors.title ? "border-red-500" : ""
+                className={`w-full px-4 py-2 border rounded ${
+                  errors.title ? "border-red-500" : "border-gray-300"
                 }`}
                 required
               />
@@ -188,15 +202,14 @@ function Home() {
                 <p className="text-red-500 text-sm mt-1">{errors.title}</p>
               )}
             </div>
-            <div className="mb-2">
-              <label className="block mb-1">Description</label>
-              <input
-                type="text"
+            <div>
+              <label className="block mb-2 font-semibold">Description</label>
+              <textarea
                 name="description"
                 value={newTask.description}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded ${
-                  errors.description ? "border-red-500" : ""
+                className={`w-full px-4 py-2 border rounded ${
+                  errors.description ? "border-red-500" : "border-gray-300"
                 }`}
                 required
               />
@@ -206,43 +219,45 @@ function Home() {
                 </p>
               )}
             </div>
-            <div className="mb-2">
-              <label className="block mb-1">Status</label>
-              <select
-                name="status"
-                value={newTask.status}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border rounded"
-                required
-              >
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-                <option value="Not Started">Not Started</option>
-              </select>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block mb-2 font-semibold">Status</label>
+                <select
+                  name="status"
+                  value={newTask.status}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border rounded border-gray-300"
+                  required
+                >
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Not Started">Not Started</option>
+                </select>
+              </div>
+              <div>
+                <label className="block mb-2 font-semibold">Priority</label>
+                <select
+                  name="priority"
+                  value={newTask.priority}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border rounded border-gray-300"
+                  required
+                >
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select>
+              </div>
             </div>
-            <div className="mb-2">
-              <label className="block mb-1">Priority</label>
-              <select
-                name="priority"
-                value={newTask.priority}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border rounded"
-                required
-              >
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-              </select>
-            </div>
-            <div className="mb-2">
-              <label className="block mb-1">Due Date</label>
+            <div>
+              <label className="block mb-2 font-semibold">Due Date</label>
               <input
                 type="date"
                 name="dueDate"
                 value={newTask.dueDate}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded ${
-                  errors.dueDate ? "border-red-500" : ""
+                className={`w-full px-4 py-2 border rounded ${
+                  errors.dueDate ? "border-red-500" : "border-gray-300"
                 }`}
                 required
               />
@@ -250,49 +265,53 @@ function Home() {
                 <p className="text-red-500 text-sm mt-1">{errors.dueDate}</p>
               )}
             </div>
-            <div className="mb-2">
-              <label className="block mb-1">Assigned To</label>
-              <input
-                type="text"
+            <div>
+              <label className="block mb-2 font-semibold">Assigned To</label>
+              <select
                 name="assignedTo"
                 value={newTask.assignedTo}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded ${
-                  errors.assignedTo ? "border-red-500" : ""
+                className={`w-full px-4 py-2 border rounded ${
+                  errors.assignedTo ? "border-red-500" : "border-gray-300"
                 }`}
                 required
-              />
+              >
+                <option value="">Select User</option>
+                {users.map((user) => (
+                  <option key={user._id} value={user._id}>
+                    {user.name}
+                  </option>
+                ))}
+              </select>
               {errors.assignedTo && (
                 <p className="text-red-500 text-sm mt-1">{errors.assignedTo}</p>
               )}
             </div>
-            <button
-              type="submit"
-              className="bg-green-500 text-white py-2 px-4 rounded"
-            >
-              Add Task
-            </button>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+              >
+                Add Task
+              </button>
+            </div>
           </form>
         </Modal>
 
-        <div className="mb-4">
-          <h3 className="text-blue-500 mb-2">Dashboard</h3>
-        </div>
-
-        <div className="mb-4 flex flex-wrap gap-4">
+        <div className="mb-6 flex flex-wrap gap-4">
           <input
             type="text"
-            name="search"
             placeholder="Search tasks..."
+            name="search"
             value={searchTerm}
             onChange={handleFilterChange}
-            className="px-3 py-2 border rounded"
+            className="px-4 py-2 border rounded w-full md:w-auto"
           />
           <select
             name="status"
             value={statusFilter}
             onChange={handleFilterChange}
-            className="px-3 py-2 border rounded"
+            className="px-4 py-2 border rounded w-full md:w-auto"
           >
             <option value="">All Statuses</option>
             <option value="In Progress">In Progress</option>
@@ -303,62 +322,55 @@ function Home() {
             name="priority"
             value={priorityFilter}
             onChange={handleFilterChange}
-            className="px-3 py-2 border rounded"
+            className="px-4 py-2 border rounded w-full md:w-auto"
           >
             <option value="">All Priorities</option>
             <option value="High">High</option>
             <option value="Medium">Medium</option>
             <option value="Low">Low</option>
           </select>
-          <input
-            type="text"
+          <select
             name="assignee"
-            placeholder="Filter by assignee..."
             value={assigneeFilter}
             onChange={handleFilterChange}
-            className="px-3 py-2 border rounded"
-          />
+            className="px-4 py-2 border rounded w-full md:w-auto"
+          >
+            <option value="">All Assignees</option>
+            {users.map((user) => (
+              <option key={user._id} value={user._id}>
+                {user.name}
+              </option>
+            ))}
+          </select>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg overflow-hidden">
-            <thead className="bg-blue-500 text-white">
-              <tr>
-                <th className="py-2 px-4 border-b text-left">Title</th>
-                <th className="py-2 px-4 border-b text-left">Description</th>
-                <th className="py-2 px-4 border-b text-left">Status</th>
-                <th className="py-2 px-4 border-b text-left">Priority</th>
-                <th className="py-2 px-4 border-b text-left">Due Date</th>
-                <th className="py-2 px-4 border-b text-left">Assigned To</th>
-                <th className="py-2 px-4 border-b text-left">Created At</th>
-                <th className="py-2 px-4 border-b text-left">Updated At</th>
-              </tr>
-            </thead>
-            <tbody>
+        <div className="bg-white shadow rounded-lg overflow-hidden">
+          {filteredTasks.length > 0 ? (
+            <ul>
               {filteredTasks.map((task) => (
-                <tr key={task._id} className="border-b hover:bg-gray-100">
-                  <td className="py-3 px-4 border-b">
-                    <Link to={`/tasks/${task._id}`}>{task.title}</Link>
-                  </td>
-                  <td className="py-3 px-4 border-b">{task.description}</td>
-                  <td className="py-3 px-4 border-b">{task.status}</td>
-                  <td className="py-3 px-4 border-b">{task.priority}</td>
-                  <td className="py-3 px-4 border-b">
-                    {new Date(task.dueDate).toLocaleDateString()}
-                  </td>
-                  <td className="py-3 px-4 border-b">
-                    {task.assignedTo ? task.assignedTo : "Unassigned"}
-                  </td>
-                  <td className="py-3 px-4 border-b">
-                    {new Date(task.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="py-3 px-4 border-b">
-                    {new Date(task.updatedAt).toLocaleDateString()}
-                  </td>
-                </tr>
+                <li
+                  key={task._id}
+                  className="px-6 py-4 border-b last:border-none hover:bg-gray-50 transition duration-300"
+                >
+                  <Link
+                    to={`/task/${task._id}`}
+                    className="block text-lg font-semibold text-gray-800"
+                  >
+                    {task.title}
+                  </Link>
+                  <p className="text-gray-600">{task.description}</p>
+                  <p className="text-sm text-gray-500">
+                    {task.status} | {task.priority} | Due: {task.dueDate}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Assigned to: {task.assignedTo}
+                  </p>
+                </li>
               ))}
-            </tbody>
-          </table>
+            </ul>
+          ) : (
+            <p className="text-center py-4">No tasks found.</p>
+          )}
         </div>
       </div>
     </div>
