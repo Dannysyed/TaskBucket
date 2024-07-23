@@ -1,17 +1,13 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
+import { FaHome, FaTasks, FaCalendarAlt, FaSignOutAlt } from "react-icons/fa";
 
 const Sidebar = () => {
-  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   const logout = () => {
-    // Remove the token from cookies
     Cookies.remove("token");
-
-    // Redirect to the login page
-    navigate("/LoginPage");
   };
 
   const toggleMenu = () => {
@@ -59,46 +55,55 @@ const Sidebar = () => {
       </div>
 
       {/* Sidebar content */}
-      <div className={`md:block ${isOpen ? "block" : "hidden"} pt-4 pb-2 md:p-4`}>
-        <div className="text-2xl font-bold text-center md:text-left mb-4">Task Bucket</div>
+      <div
+        className={`md:block ${isOpen ? "block" : "hidden"} pt-4 pb-2 md:p-4`}
+      >
+        <div className="text-2xl font-bold text-center md:text-left mb-4">
+          Task Bucket
+        </div>
         <nav>
           <ul className="space-y-2">
             <li>
               <Link
                 to="/homepage"
-                className="block py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
+                className="flex items-center py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
                 onClick={closeMenu}
               >
+                <FaHome className="mr-3" />
                 Home
               </Link>
             </li>
             <li>
               <Link
                 to="/tasks"
-                className="block py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
+                className="flex items-center py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
                 onClick={closeMenu}
               >
+                <FaTasks className="mr-3" />
                 Tasks Detail
               </Link>
             </li>
             <li>
               <Link
                 to="/calendar"
-                className="block py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
+                className="flex items-center py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
                 onClick={closeMenu}
               >
+                <FaCalendarAlt className="mr-3" />
                 Calendar
               </Link>
             </li>
           </ul>
         </nav>
         <div className="mt-auto pt-4 border-t border-gray-700">
-          <button
+          <Link
+            to="/"
+            className="flex items-center w-full py-2.5 px-4 rounded text-left hover:bg-red-600 transition duration-300"
             onClick={logout}
-            className="w-full py-2.5 px-4 rounded text-left hover:bg-red-600 transition duration-300"
           >
+            <FaSignOutAlt className="mr-3" />
             Logout
-          </button>
+          </Link>
         </div>
       </div>
     </div>
