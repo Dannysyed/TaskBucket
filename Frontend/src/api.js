@@ -127,3 +127,22 @@ export const addComment = async (token, taskId, content) => {
   );
   return response.data;
 };
+
+// src/api/index.js
+export const fetchTasksByDate = async (token, date) => {
+  const response = await fetch(`https://your-api-endpoint/tasks?date=${date}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    // Handle HTTP errors
+    const errorText = await response.text();
+    throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
+  }
+
+  return response.json();
+};
+

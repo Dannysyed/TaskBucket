@@ -14,8 +14,8 @@ function Comments({ taskId }) {
     const getComments = async () => {
       try {
         const data = await fetchComments(token, taskId);
-        if (data.message) {
-          setNoComment("No comments Fouond");
+        if (data.length === 0) {
+          setNoComment("No comments found");
         } else {
           setComments(data); // Assuming the API returns an array of comment objects
         }
@@ -35,6 +35,7 @@ function Comments({ taskId }) {
       const newCommentData = await addComment(token, taskId, newComment);
       setComments((prevComments) => [...prevComments, newCommentData]);
       setNewComment("");
+      setNoComment(""); // Clear no comment message when a new comment is added
     } catch (err) {
       setError(err.message);
     }
@@ -68,19 +69,23 @@ function Comments({ taskId }) {
         </button>
       </form>
       <div className="max-h-96 overflow-y-auto border-t border-gray-300 p-4">
-        <ul className="space-y-4">
-          {comments?.map((comment) => (
-            <li
-              key={comment._id}
-              className="p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50"
-            >
-              <p className="text-gray-700 mb-2">{comment.content}</p>
-              <p className="text-sm text-gray-500">
-                {new Date(comment.createdAt).toLocaleDateString()}
-              </p>
-            </li>
-          ))}
-        </ul>
+        {noComment ? (
+          <p className="text-center text-gray-500">{noComment}</p>
+        ) : (
+          <ul className="space-y-4">
+            {comments.map((comment) => (
+              <li
+                key={comment._id}
+                className="p-4 border border-gray-200 rounded-lg shadow-sm bg-gray-50"
+              >
+                <p className="text-gray-700 mb-2">{comment.content}</p>
+                <p className="text-sm text-gray-500">
+                  {new Date(comment.createdAt).toLocaleDateString()}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

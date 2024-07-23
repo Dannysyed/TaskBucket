@@ -8,6 +8,7 @@ import SignupPage from "./components/Auth/Signup/SignupPage";
 import PrivateRoute from "./components/PrivateRoute"; // Import the PrivateRoute component
 import Cookies from "js-cookie";
 import TaskDetail from "./components/TaskDetail";
+import CalendarPage from "./components/CalendarPage"; // Import the CalendarPage component
 
 function App() {
   const token = Cookies.get("token");
@@ -34,6 +35,16 @@ function App() {
           element={
             <PrivateRoute>
               <TaskDetail />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Calendar page route */}
+        <Route
+          path="/calendar"
+          element={
+            <PrivateRoute>
+              <CalendarPage />
             </PrivateRoute>
           }
         />

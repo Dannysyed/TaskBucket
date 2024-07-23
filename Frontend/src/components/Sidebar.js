@@ -81,6 +81,15 @@ const Sidebar = () => {
                 Tasks Detail
               </Link>
             </li>
+            <li>
+              <Link
+                to="/calendar"
+                className="block py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
+                onClick={closeMenu}
+              >
+                Calendar
+              </Link>
+            </li>
           </ul>
         </nav>
         <div className="mt-auto pt-4 border-t border-gray-700">
