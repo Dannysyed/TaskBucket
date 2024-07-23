@@ -5,7 +5,7 @@ import Modal from "./Modal";
 import Sidebar from "./Sidebar";
 import { Link } from "react-router-dom";
 import { HiPlusCircle } from "react-icons/hi"; // Import an icon for the "Add Task" button
-import { useSpring, animated } from "react-spring"; // Import react-spring for animations
+import { animated, useSpring } from "@react-spring/web"; // Import react-spring for animations
 
 function Home() {
   const [tasks, setTasks] = useState([]);
