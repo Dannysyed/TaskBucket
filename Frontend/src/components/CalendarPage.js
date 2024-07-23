@@ -6,7 +6,7 @@ import Sidebar from "./Sidebar"; // Import Sidebar component
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BiErrorCircle } from "react-icons/bi";
 import { MdClose } from "react-icons/md";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaCheckCircle, FaTimesCircle, FaArrowRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 function CalendarPage() {
@@ -86,7 +86,7 @@ function CalendarPage() {
       default:
         return (
           <span className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
-            Unknown
+            <FaArrowRight />
           </span>
         );
     }
