@@ -75,6 +75,7 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
+
                 to="/tasks"
                 className="flex items-center py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
                 onClick={closeMenu}
@@ -85,6 +86,7 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
+
                 to="/calendar"
                 className="flex items-center py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
                 onClick={closeMenu}

@@ -302,9 +302,13 @@ function Home() {
   };
 
   const debouncedSearch = useCallback(
-    debounce((value) => setSearchTerm(value), 300),
+    debounce((value) => {
+      setSearchTerm(value);
+    }, 300),
     []
   );
+  
+  
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -350,7 +354,7 @@ function Home() {
           onClick={() => window.location.reload()}
         >
           Retry
-        </button>
+        </button> 
       </div>
     );
   }
