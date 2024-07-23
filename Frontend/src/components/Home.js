@@ -5,6 +5,7 @@ import Modal from "./Modal";
 import Sidebar from "./Sidebar";
 import { Link } from "react-router-dom";
 import { HiPlusCircle } from "react-icons/hi"; // Import an icon for the "Add Task" button
+import { useSpring, animated } from "react-spring"; // Import react-spring for animations
 
 function Home() {
   const [tasks, setTasks] = useState([]);
@@ -158,6 +159,11 @@ function Home() {
     );
   });
 
+  const modalAnimation = useSpring({
+    opacity: isModalVisible ? 1 : 0,
+    transform: isModalVisible ? `translateY(0)` : `translateY(-20px)`,
+  });
+
   if (loading) {
     return <p className="text-center text-gray-600">Loading...</p>;
   }
@@ -181,122 +187,134 @@ function Home() {
           </button>
         </div>
 
-        <Modal
-          isVisible={isModalVisible}
-          onClose={() => setIsModalVisible(false)}
-        >
-          <form onSubmit={handleSubmit} className="space-y-4 p-4">
-            <div>
-              <label className="block mb-2 font-semibold">Title</label>
-              <input
-                type="text"
-                name="title"
-                value={newTask.title}
-                onChange={handleChange}
-                className={`w-full px-4 py-2 border rounded ${
-                  errors.title ? "border-red-500" : "border-gray-300"
-                }`}
-                required
-              />
-              {errors.title && (
-                <p className="text-red-500 text-sm mt-1">{errors.title}</p>
-              )}
-            </div>
-            <div>
-              <label className="block mb-2 font-semibold">Description</label>
-              <textarea
-                name="description"
-                value={newTask.description}
-                onChange={handleChange}
-                className={`w-full px-4 py-2 border rounded ${
-                  errors.description ? "border-red-500" : "border-gray-300"
-                }`}
-                required
-              />
-              {errors.description && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.description}
-                </p>
-              )}
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block mb-2 font-semibold">Status</label>
-                <select
-                  name="status"
-                  value={newTask.status}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded border-gray-300"
-                  required
-                >
-                  <option value="In Progress">In Progress</option>
-                  <option value="Completed">Completed</option>
-                  <option value="Not Started">Not Started</option>
-                </select>
-              </div>
-              <div>
-                <label className="block mb-2 font-semibold">Priority</label>
-                <select
-                  name="priority"
-                  value={newTask.priority}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded border-gray-300"
-                  required
-                >
-                  <option value="High">High</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Low">Low</option>
-                </select>
-              </div>
-            </div>
-            <div>
-              <label className="block mb-2 font-semibold">Due Date</label>
-              <input
-                type="date"
-                name="dueDate"
-                value={newTask.dueDate}
-                onChange={handleChange}
-                className={`w-full px-4 py-2 border rounded ${
-                  errors.dueDate ? "border-red-500" : "border-gray-300"
-                }`}
-                required
-              />
-              {errors.dueDate && (
-                <p className="text-red-500 text-sm mt-1">{errors.dueDate}</p>
-              )}
-            </div>
-            <div>
-              <label className="block mb-2 font-semibold">Assigned To</label>
-              <select
-                name="assignedTo"
-                value={newTask.assignedTo}
-                onChange={handleChange}
-                className={`w-full px-4 py-2 border rounded ${
-                  errors.assignedTo ? "border-red-500" : "border-gray-300"
-                }`}
-                required
-              >
-                <option value="">Select User</option>
-                {users.map((user) => (
-                  <option key={user._id} value={user._id}>
-                    {user.name}
-                  </option>
-                ))}
-              </select>
-              {errors.assignedTo && (
-                <p className="text-red-500 text-sm mt-1">{errors.assignedTo}</p>
-              )}
-            </div>
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
-              >
-                Add Task
-              </button>
-            </div>
-          </form>
-        </Modal>
+        {isModalVisible && (
+          <animated.div style={modalAnimation}>
+            <Modal
+              isVisible={isModalVisible}
+              onClose={() => setIsModalVisible(false)}
+            >
+              <form onSubmit={handleSubmit} className="space-y-4 p-4">
+                <div>
+                  <label className="block mb-2 font-semibold">Title</label>
+                  <input
+                    type="text"
+                    name="title"
+                    value={newTask.title}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 border rounded ${
+                      errors.title ? "border-red-500" : "border-gray-300"
+                    }`}
+                    required
+                  />
+                  {errors.title && (
+                    <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block mb-2 font-semibold">
+                    Description
+                  </label>
+                  <textarea
+                    name="description"
+                    value={newTask.description}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 border rounded ${
+                      errors.description ? "border-red-500" : "border-gray-300"
+                    }`}
+                    required
+                  />
+                  {errors.description && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.description}
+                    </p>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block mb-2 font-semibold">Status</label>
+                    <select
+                      name="status"
+                      value={newTask.status}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border rounded border-gray-300"
+                      required
+                    >
+                      <option value="In Progress">In Progress</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Not Started">Not Started</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block mb-2 font-semibold">Priority</label>
+                    <select
+                      name="priority"
+                      value={newTask.priority}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border rounded border-gray-300"
+                      required
+                    >
+                      <option value="High">High</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Low">Low</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="block mb-2 font-semibold">Due Date</label>
+                  <input
+                    type="date"
+                    name="dueDate"
+                    value={newTask.dueDate}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 border rounded ${
+                      errors.dueDate ? "border-red-500" : "border-gray-300"
+                    }`}
+                    required
+                  />
+                  {errors.dueDate && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.dueDate}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block mb-2 font-semibold">
+                    Assigned To
+                  </label>
+                  <select
+                    name="assignedTo"
+                    value={newTask.assignedTo}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 border rounded ${
+                      errors.assignedTo ? "border-red-500" : "border-gray-300"
+                    }`}
+                    required
+                  >
+                    <option value="">Select User</option>
+                    {users.map((user) => (
+                      <option key={user._id} value={user._id}>
+                        {user.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.assignedTo && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.assignedTo}
+                    </p>
+                  )}
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+                  >
+                    Add Task
+                  </button>
+                </div>
+              </form>
+            </Modal>
+          </animated.div>
+        )}
 
         <div className="mb-6 flex flex-wrap gap-4">
           <input
@@ -353,7 +371,7 @@ function Home() {
                   className="px-6 py-4 border-b last:border-none hover:bg-gray-50 transition duration-300"
                 >
                   <Link
-                    to={`/task/${task._id}`}
+                    to={`/tasks/${task._id}`}
                     className="block text-lg font-semibold text-gray-800"
                   >
                     {task.title}
