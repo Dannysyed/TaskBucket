@@ -307,8 +307,6 @@ function Home() {
     }, 300),
     []
   );
-  
-  
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -354,7 +352,7 @@ function Home() {
           onClick={() => window.location.reload()}
         >
           Retry
-        </button> 
+        </button>
       </div>
     );
   }
@@ -460,7 +458,8 @@ function Home() {
                 </Link>
                 <p className="text-gray-600 mt-2">{task.description}</p>
                 <p className="text-sm text-gray-500 mt-1">
-                  {task.status} | {task.priority} | Due: {task.dueDate}
+                  {task.status} | {task.priority} | Due:{" "}
+                  {new Date(task.dueDate).toLocaleDateString()}
                 </p>
                 <p className="text-sm text-gray-500 mt-1">
                   Assigned to: {task.assignedTo}

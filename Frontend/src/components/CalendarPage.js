@@ -6,7 +6,7 @@ import Sidebar from "./Sidebar"; // Import Sidebar component
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BiErrorCircle } from "react-icons/bi";
 import { MdClose } from "react-icons/md";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaCheckCircle, FaTimesCircle, FaArrowRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 function CalendarPage() {
@@ -19,6 +19,7 @@ function CalendarPage() {
   const token = Cookies.get("token");
 
   let navigate = useNavigate();
+
   useEffect(() => {
     const getTasks = async () => {
       setLoading(true);
@@ -85,20 +86,21 @@ function CalendarPage() {
       default:
         return (
           <span className="inline-flex items-center px-2 py-1 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">
-            Unknown
+            <FaArrowRight />
           </span>
         );
     }
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex flex-col md:flex-row h-screen bg-gray-100">
       <Sidebar />
       <main className="flex-1 p-4 lg:p-6 bg-gradient-to-br from-gray-200 to-gray-300 overflow-y-auto">
         <h2 className="text-2xl lg:text-4xl font-bold text-gray-900 mb-6">
           Calendar
         </h2>
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 justify-center">
+          {/* Calendar */}
           <div className="flex-1 max-w-full lg:max-w-3xl mx-auto p-4 lg:p-6 rounded-lg shadow-xl border border-gray-300 bg-white">
             <Calendar
               onChange={handleDateChange}
@@ -111,6 +113,8 @@ function CalendarPage() {
               prev2Label={null}
             />
           </div>
+
+          {/* Tasks */}
           <div className="flex-1 bg-white p-4 lg:p-6 rounded-lg shadow-xl border border-gray-300 overflow-y-auto custom-scrollbar">
             <h3 className="text-xl lg:text-3xl font-semibold text-gray-900 mb-4 lg:mb-6">
               Tasks for {date.toDateString()}
