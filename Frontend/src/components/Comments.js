@@ -14,7 +14,7 @@ function Comments({ taskId }) {
     const getComments = async () => {
       try {
         const data = await fetchComments(token, taskId);
-        if (data.length === 0) {
+        if (data.message) {
           setNoComment("No comments found");
         } else {
           setComments(data); // Assuming the API returns an array of comment objects
