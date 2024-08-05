@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Project = require("../models/Project");
+const auth = require("../middleware/auth");
 
 // Create a project
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const project = new Project(req.body);
     await project.save();
@@ -14,7 +15,7 @@ router.post("/", async (req, res) => {
 });
 
 // Retrieve all projects
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
     const projects = await Project.find().populate("owner");
     res.status(200).send(projects);
@@ -24,7 +25,7 @@ router.get("/", async (req, res) => {
 });
 
 // Retrieve a project by ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
   try {
     const project = await Project.findById(req.params.id).populate("owner");
     if (!project) {
@@ -37,7 +38,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update a project by ID
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   try {
     const project = await Project.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -53,7 +54,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // Delete a project by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
     const project = await Project.findByIdAndDelete(req.params.id);
     if (!project) {

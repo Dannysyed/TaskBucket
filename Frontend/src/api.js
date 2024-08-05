@@ -63,6 +63,31 @@ export const fetchOneTasks = async (token, taskId) => {
     throw error.response.data;
   }
 };
+// get project
+export const getProjectsAll = async (token) => {
+  try {
+    const response = await axios.get(`${"http://localhost:3001"}/projects`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+export const createProject = async (project, token) => {
+  const response = await fetch("/api/projects", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(project),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to create project");
+  }
+  return response.json();
+};
 
 // Create a new task
 export const createTask = async (token, taskData) => {
@@ -110,6 +135,7 @@ export const deleteTask = async (token, taskId) => {
     throw error.response.data;
   }
 };
+
 export const fetchComments = async (token, taskId) => {
   const response = await axios.get(`http://localhost:3001/comments/${taskId}`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -132,17 +158,18 @@ export const addComment = async (token, taskId, content) => {
 export const fetchTasksByDate = async (token, date) => {
   const response = await fetch(`https://your-api-endpoint/tasks?date=${date}`, {
     headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
   });
 
   if (!response.ok) {
     // Handle HTTP errors
     const errorText = await response.text();
-    throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
+    throw new Error(
+      `HTTP error! status: ${response.status}, response: ${errorText}`
+    );
   }
 
   return response.json();
 };
-

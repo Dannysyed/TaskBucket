@@ -6,6 +6,7 @@ import {
   updateTask,
   deleteTask,
   getUsersAll,
+  getProjectsAll, // Make sure to import the getProjectsAll function
 } from "../api";
 import Modal from "./Modal";
 import Sidebar from "./Sidebar";
@@ -20,6 +21,8 @@ const TaskForm = ({
   handleSubmit,
   errors,
   users,
+  projects, // Pass the projects prop to TaskForm
+
   onClose,
   editMode,
 }) => (
@@ -126,6 +129,28 @@ const TaskForm = ({
         <p className="text-red-500 text-sm mt-1">{errors.assignedTo}</p>
       )}
     </div>
+    <div>
+      <label className="block mb-2 font-semibold">Project</label>
+      <select
+        name="project"
+        value={newTask.project}
+        onChange={handleChange}
+        className={`w-full px-4 py-2 border rounded ${
+          errors.project ? "border-red-500" : "border-gray-300"
+        }`}
+        required
+      >
+        <option value="">Select Project</option>
+        {projects.map((project) => (
+          <option key={project._id} value={project._id}>
+            {project.name}
+          </option>
+        ))}
+      </select>
+      {errors.project && (
+        <p className="text-red-500 text-sm mt-1">{errors.project}</p>
+      )}
+    </div>
     <div className="flex justify-end">
       <button
         type="submit"
@@ -161,7 +186,9 @@ function Home() {
   const [statusFilter, setStatusFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [assigneeFilter, setAssigneeFilter] = useState("");
+  const [projectFilter, setProjectFilter] = useState(""); // Add project filter state
   const [users, setUsers] = useState([]);
+  const [projects, setProjects] = useState([]); // Add projects state
   const [errors, setErrors] = useState({
     title: "",
     description: "",
@@ -199,6 +226,18 @@ function Home() {
     };
 
     getUsers();
+  }, [token]);
+  useEffect(() => {
+    const getProjects = async () => {
+      try {
+        const data = await getProjectsAll(token); // Fetch the projects data
+        setProjects(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    getProjects();
   }, [token]);
 
   const handleChange = (e) => {
@@ -276,6 +315,7 @@ function Home() {
         priority: "High",
         dueDate: "",
         assignedTo: "",
+        project: "", // Reset project field
       });
       setIsModalVisible(false);
       setEditMode(false);
@@ -326,7 +366,8 @@ function Home() {
       task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (statusFilter ? task.status === statusFilter : true) &&
       (priorityFilter ? task.priority === priorityFilter : true) &&
-      (assigneeFilter ? task.assignedTo === assigneeFilter : true)
+      (assigneeFilter ? task.assignedTo === assigneeFilter : true) &&
+      (projectFilter ? task.project === projectFilter : true)
     );
   });
 
@@ -381,6 +422,7 @@ function Home() {
               <TaskForm
                 newTask={newTask}
                 handleChange={handleChange}
+                projects={projects}
                 handleSubmit={handleSubmit}
                 errors={errors}
                 users={users}
@@ -410,6 +452,18 @@ function Home() {
             <option value="In Progress">In Progress</option>
             <option value="Completed">Completed</option>
             <option value="Not Started">Not Started</option>
+          </select>
+          <select
+            value={projectFilter}
+            onChange={(e) => setProjectFilter(e.target.value)}
+            className="px-4 py-2 border rounded"
+          >
+            <option value="">All Projects</option>
+            {projects.map((project) => (
+              <option key={project._id} value={project._id}>
+                {project.name}
+              </option>
+            ))}
           </select>
           <select
             name="priority"
@@ -463,6 +517,13 @@ function Home() {
                 </p>
                 <p className="text-sm text-gray-500 mt-1">
                   Assigned to: {task.assignedTo}
+                </p>
+                <p>
+                  Project:{" "}
+                  {
+                    projects.find((project) => project._id === task.project)
+                      ?.name
+                  }
                 </p>
                 <div className="flex justify-end space-x-2 mt-4">
                   <button
