@@ -155,21 +155,41 @@ export const addComment = async (token, taskId, content) => {
 };
 
 // src/api/index.js
-export const fetchTasksByDate = async (token, date) => {
-  const response = await fetch(`https://your-api-endpoint/tasks?date=${date}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    // Handle HTTP errors
-    const errorText = await response.text();
+export const fetchAttachments = async (token, taskId) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/attachments/${taskId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
     throw new Error(
-      `HTTP error! status: ${response.status}, response: ${errorText}`
+      error.response?.data?.message || "Error fetching attachments"
     );
   }
+};
 
-  return response.json();
+// Upload a new attachment
+export const uploadAttachment = async (token, formData, taskId) => {
+  try {
+    const response = await axios.post(
+      `http://localhost:3001/attachments?taskId=${taskId}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Error uploading attachment"
+    );
+  }
 };
