@@ -75,7 +75,7 @@ export const getProjectsAll = async (token) => {
   }
 };
 export const createProject = async (project, token) => {
-  const response = await fetch("/api/projects", {
+  const response = await fetch(`${"http://localhost:3001"}/projects`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
