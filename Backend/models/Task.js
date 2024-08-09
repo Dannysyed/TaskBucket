@@ -16,7 +16,8 @@ const taskSchema = new mongoose.Schema({
   dueDate: { type: Date, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-  assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  assignedTo: { type: String, ref: "User" },
+  project: { type: mongoose.Schema.Types.ObjectId, ref: "Project" }, // Reference to Project
 });
 
 module.exports = mongoose.model("Task", taskSchema);

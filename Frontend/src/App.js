@@ -1,3 +1,4 @@
+// src/App.js
 import React from "react";
 import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
 import Home from "./components/Home";
@@ -6,6 +7,8 @@ import LoginPage from "./components/Auth/Login/LoginPage";
 import SignupPage from "./components/Auth/Signup/SignupPage";
 import PrivateRoute from "./components/PrivateRoute"; // Import the PrivateRoute component
 import Cookies from "js-cookie";
+import TaskDetail from "./components/TaskDetail";
+import CalendarPage from "./components/CalendarPage"; // Import the CalendarPage component
 
 function App() {
   const token = Cookies.get("token");
@@ -22,6 +25,26 @@ function App() {
           element={
             <PrivateRoute>
               <Home />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Task detail route */}
+        <Route
+          path="/tasks/:taskId"
+          element={
+            <PrivateRoute>
+              <TaskDetail />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Calendar page route */}
+        <Route
+          path="/calendar"
+          element={
+            <PrivateRoute>
+              <CalendarPage />
             </PrivateRoute>
           }
         />

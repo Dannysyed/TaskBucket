@@ -1,7 +1,5 @@
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL;
-
 // Register a new user
 export const registerUser = async (userData) => {
   console.log(userData, "asd");
@@ -30,9 +28,9 @@ export const loginUser = async (credentials) => {
 };
 
 // Example protected route
-export const getUsers = async (token) => {
+export const getUsersAll = async (token) => {
   try {
-    const response = await axios.get(`${API_URL}/users`, {
+    const response = await axios.get(`${"http://localhost:3001"}/users`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -52,13 +50,55 @@ export const fetchTasks = async (token) => {
     throw error.response.data;
   }
 };
-
-// Create a new task
-export const createTask = async (taskData, token) => {
+export const fetchOneTasks = async (token, taskId) => {
   try {
-    const response = await axios.post(`${API_URL}/tasks`, taskData, {
+    const response = await axios.get(
+      `${"http://localhost:3001"}/tasks/${taskId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+// get project
+export const getProjectsAll = async (token) => {
+  try {
+    const response = await axios.get(`${"http://localhost:3001"}/projects`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+export const createProject = async (project, token) => {
+  const response = await fetch(`${"http://localhost:3001"}/projects`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(project),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to create project");
+  }
+  return response.json();
+};
+
+// Create a new task
+export const createTask = async (token, taskData) => {
+  try {
+    const response = await axios.post(
+      `${"http://localhost:3001"}/tasks`,
+      taskData,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -66,11 +106,15 @@ export const createTask = async (taskData, token) => {
 };
 
 // Update an existing task
-export const updateTask = async (taskId, taskData, token) => {
+export const updateTask = async (token, taskId, taskData) => {
   try {
-    const response = await axios.put(`${API_URL}/tasks/${taskId}`, taskData, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await axios.put(
+      `${"http://localhost:3001"}/tasks/${taskId}`,
+      taskData,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -78,13 +122,74 @@ export const updateTask = async (taskId, taskData, token) => {
 };
 
 // Delete a task
-export const deleteTask = async (taskId, token) => {
+export const deleteTask = async (token, taskId) => {
   try {
-    const response = await axios.delete(`${API_URL}/tasks/${taskId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await axios.delete(
+      `${"http://localhost:3001"}/tasks/${taskId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response.data;
+  }
+};
+
+export const fetchComments = async (token, taskId) => {
+  const response = await axios.get(`http://localhost:3001/comments/${taskId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const addComment = async (token, taskId, content) => {
+  const response = await axios.post(
+    `http://localhost:3001/comments/${taskId}`,
+    { content },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
+};
+
+// src/api/index.js
+export const fetchAttachments = async (token, taskId) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/attachments/${taskId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Error fetching attachments"
+    );
+  }
+};
+
+// Upload a new attachment
+export const uploadAttachment = async (token, formData, taskId) => {
+  try {
+    const response = await axios.post(
+      `http://localhost:3001/attachments?taskId=${taskId}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Error uploading attachment"
+    );
   }
 };

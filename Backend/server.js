@@ -6,6 +6,8 @@ const userRoutes = require("./routes/users");
 const taskRoutes = require("./routes/tasks");
 const projectRoutes = require("./routes/projects");
 const authRoutes = require("./routes/auth");
+const commentRoutes = require("./routes/comments");
+const attachmentRoutes = require("./routes/attachments");
 const cors = require("cors");
 const app = express();
 const port = 3001;
@@ -34,6 +36,8 @@ app.use("/users", userRoutes);
 app.use("/tasks", taskRoutes);
 app.use("/projects", projectRoutes);
 app.use("/auth", authRoutes);
+app.use("/comments", commentRoutes);
+app.use("/attachments", attachmentRoutes);
 app.get("/", (req, res) => {
   res.send("Task Management System API");
 });

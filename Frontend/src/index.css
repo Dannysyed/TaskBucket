@@ -14,3 +14,14 @@ code {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom styles for calendar tiles */
+.task-available {
+  background-color: #ffd700 !important; /* Yellow background */
+  border: 2px solid #ffa500 !important; /* Orange border */
+}
+
+.react-calendar__tile--now {
+  background: #bde4ff !important; /* Light blue for the current day */
+  border-radius: 50%;
+}
