@@ -4,7 +4,9 @@ Task Bucket is a simple web application designed to help individuals or teams or
 
 # Promo 
 
-<iframe src="https://drive.google.com/file/d/1LJWegZE2wQkBCvBsGijVJKh11P4aNO0N/preview" width="640" height="480" allow="autoplay"></iframe>
+![Promo Video Preview](https://github.com/your-repo/your-project/path-to-gif.gif)
+[Watch Promo Video](https://drive.google.com/file/d/1LJWegZE2wQkBCvBsGijVJKh11P4aNO0N/view?usp=drive_link)
+
 
 Lofi wireframe
 ![New Wireframe 1](https://github.com/Dannysyed/TaskBucket/assets/95587269/7dbeff63-dca6-4e7c-b80b-f69750de4def)
