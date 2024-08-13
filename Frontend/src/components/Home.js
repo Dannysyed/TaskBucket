@@ -506,8 +506,9 @@ function Home() {
     debounce((value) => {
       setSearchTerm(value);
     }, 300),
-    []
+    [setSearchTerm]
   );
+  
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
