@@ -1,7 +1,7 @@
 import axios from "axios";
 
-let BaseUrl = "https://taskbucket.onrender.com";
-// let BaseUrl = "http://localhost:3001";
+//let BaseUrl = "https://taskbucket.onrender.com";
+let BaseUrl = "http://localhost:3001";
 // Register a new user
 export const registerUser = async (userData) => {
   console.log(userData, "asd");
