@@ -9,6 +9,7 @@ import PrivateRoute from "./components/PrivateRoute"; // Import the PrivateRoute
 import Cookies from "js-cookie";
 import TaskDetail from "./components/TaskDetail";
 import CalendarPage from "./components/CalendarPage"; // Import the CalendarPage component
+import TaskChart from "./components/TaskChart";
 
 function App() {
   const token = Cookies.get("token");
@@ -18,7 +19,6 @@ function App() {
       <Routes>
         <Route path="/register" element={<SignupPage />} />
         <Route path="/NotFound" element={<NotFound />} />
-
         {/* Protect the homepage route */}
         <Route
           path="/homepage"
@@ -28,7 +28,6 @@ function App() {
             </PrivateRoute>
           }
         />
-
         {/* Task detail route */}
         <Route
           path="/tasks/:taskId"
@@ -38,7 +37,6 @@ function App() {
             </PrivateRoute>
           }
         />
-
         {/* Calendar page route */}
         <Route
           path="/calendar"
@@ -49,6 +47,14 @@ function App() {
           }
         />
 
+        <Route
+          path="/TasksOverview"
+          element={
+            <PrivateRoute>
+              <TaskChart />
+            </PrivateRoute>
+          }
+        />
         {/* Catch-all route for 404 pages */}
         <Route
           path="*"
