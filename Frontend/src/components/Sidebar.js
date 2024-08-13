@@ -75,18 +75,16 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-
-                to="/tasks"
+                to="/TasksOverview"
                 className="flex items-center py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
                 onClick={closeMenu}
               >
                 <FaTasks className="mr-3" />
-                Tasks Detail
+                Tasks Overview
               </Link>
             </li>
             <li>
               <Link
-
                 to="/calendar"
                 className="flex items-center py-2.5 px-4 rounded hover:bg-gray-700 transition duration-300"
                 onClick={closeMenu}
