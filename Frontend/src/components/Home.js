@@ -6,6 +6,8 @@ import {
   updateTask,
   deleteTask,
   getUsersAll,
+  getProjectsAll,
+  createProject, // Make sure to import the getProjectsAll function
 } from "../api";
 import Modal from "./Modal";
 import Sidebar from "./Sidebar";
@@ -20,129 +22,313 @@ const TaskForm = ({
   handleSubmit,
   errors,
   users,
+  projects,
+  setProjects, // Add a prop to update the projects list after creation
   onClose,
   editMode,
-}) => (
-  <form onSubmit={handleSubmit} className="space-y-4 p-4">
-    <h2 className="text-2xl font-bold mb-4">
-      {editMode ? "Edit Task" : "Add New Task"}
-    </h2>
-    <div>
-      <label className="block mb-2 font-semibold">Title</label>
-      <input
-        type="text"
-        name="title"
-        value={newTask.title}
-        onChange={handleChange}
-        className={`w-full px-4 py-2 border rounded ${
-          errors.title ? "border-red-500" : "border-gray-300"
-        }`}
-        required
-      />
-      {errors.title && (
-        <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+  token,
+}) => {
+  const [creatingProject, setCreatingProject] = useState(false);
+  const [newProject, setNewProject] = useState({
+    name: "",
+    description: "",
+    startDate: "",
+    endDate: "",
+    owner: "", // Assuming you have the owner ID
+  });
+  const handleProjectCreation = async () => {
+    try {
+      const createdProject = await createProject(newProject, token);
+
+      // Update the projects list with the newly created project
+      setProjects((prevProjects) => [...prevProjects, createdProject]);
+
+      // Auto-select the newly created project for the task
+      handleChange({
+        target: {
+          name: "project",
+          value: createdProject._id,
+        },
+      });
+
+      // Reset the new project form
+      setNewProject({
+        name: "",
+        description: "",
+        startDate: "",
+        endDate: "",
+        owner: "",
+      });
+
+      setCreatingProject(false);
+    } catch (error) {
+      console.error("Failed to create project:", error.message);
+      // Handle error display if necessary
+    }
+  };
+
+  return (
+    <div className="space-y-4 p-4">
+      <h2 className="text-2xl font-bold mb-4">
+        {editMode ? "Edit Task" : "Add New Task"}
+      </h2>
+
+      {/* Project Creation Section */}
+      {creatingProject ? (
+        <div className="space-y-4 mb-8">
+          <h3 className="text-xl font-semibold">Create a New Project</h3>
+          <div>
+            <label className="block mb-2 font-semibold">Project Name</label>
+            <input
+              type="text"
+              name="projectName"
+              value={newProject.name}
+              onChange={(e) =>
+                setNewProject({ ...newProject, name: e.target.value })
+              }
+              className="w-full px-4 py-2 border rounded border-gray-300"
+              required
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Description</label>
+            <textarea
+              name="projectDescription"
+              value={newProject.description}
+              onChange={(e) =>
+                setNewProject({ ...newProject, description: e.target.value })
+              }
+              className="w-full px-4 py-2 border rounded border-gray-300"
+              required
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-2 font-semibold">Start Date</label>
+              <input
+                type="date"
+                name="startDate"
+                value={newProject.startDate}
+                onChange={(e) =>
+                  setNewProject({ ...newProject, startDate: e.target.value })
+                }
+                className="w-full px-4 py-2 border rounded border-gray-300"
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-semibold">End Date</label>
+              <input
+                type="date"
+                name="endDate"
+                value={newProject.endDate}
+                onChange={(e) =>
+                  setNewProject({ ...newProject, endDate: e.target.value })
+                }
+                className="w-full px-4 py-2 border rounded border-gray-300"
+                required
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block mb-2 font-semibold">Owner</label>
+            <select
+              name="owner"
+              value={newProject.owner}
+              onChange={(e) =>
+                setNewProject({ ...newProject, owner: e.target.value })
+              }
+              className="w-full px-4 py-2 border rounded border-gray-300"
+              required
+            >
+              <option value="">Select Owner</option>
+              {users.map((user) => (
+                <option key={user._id} value={user._id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex justify-end">
+            <button
+              type="button"
+              className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition duration-300"
+              onClick={handleProjectCreation}
+            >
+              Save Project
+            </button>
+            <button
+              type="button"
+              className="ml-2 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 transition duration-300"
+              onClick={() => setCreatingProject(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="mb-8">
+          <button
+            type="button"
+            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition duration-300 mb-4"
+            onClick={() => setCreatingProject(true)}
+          >
+            Create New Project
+          </button>
+        </div>
+      )}
+
+      {/* Task Form */}
+      {!creatingProject && (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block mb-2 font-semibold">Project</label>
+            <select
+              name="project"
+              value={newTask.project}
+              onChange={handleChange}
+              className={`w-full px-4 py-2 border rounded ${
+                errors.project ? "border-red-500" : "border-gray-300"
+              }`}
+              required
+            >
+              <option value="">Select Project</option>
+              {projects.map((project) => (
+                <option key={project._id} value={project._id}>
+                  {project.name}
+                </option>
+              ))}
+            </select>
+            {errors.project && (
+              <p className="text-red-500 text-sm mt-1">{errors.project}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-2 font-semibold">Task Title</label>
+            <input
+              type="text"
+              name="title"
+              value={newTask.title}
+              onChange={handleChange}
+              className={`w-full px-4 py-2 border rounded ${
+                errors.title ? "border-red-500" : "border-gray-300"
+              }`}
+              required
+            />
+            {errors.title && (
+              <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-2 font-semibold">Description</label>
+            <textarea
+              name="description"
+              value={newTask.description}
+              onChange={handleChange}
+              className={`w-full px-4 py-2 border rounded ${
+                errors.description ? "border-red-500" : "border-gray-300"
+              }`}
+              required
+            />
+            {errors.description && (
+              <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-2 font-semibold">Status</label>
+              <select
+                name="status"
+                value={newTask.status}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded border-gray-300"
+                required
+              >
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Not Started">Not Started</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block mb-2 font-semibold">Priority</label>
+              <select
+                name="priority"
+                value={newTask.priority}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border rounded border-gray-300"
+                required
+              >
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block mb-2 font-semibold">Due Date</label>
+            <input
+              type="date"
+              name="dueDate"
+              value={newTask.dueDate}
+              onChange={handleChange}
+              className={`w-full px-4 py-2 border rounded ${
+                errors.dueDate ? "border-red-500" : "border-gray-300"
+              }`}
+              required
+            />
+            {errors.dueDate && (
+              <p className="text-red-500 text-sm mt-1">{errors.dueDate}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-2 font-semibold">Assigned To</label>
+            <select
+              name="assignedTo"
+              value={newTask.assignedTo}
+              onChange={handleChange}
+              className={`w-full px-4 py-2 border rounded ${
+                errors.assignedTo ? "border-red-500" : "border-gray-300"
+              }`}
+              required
+            >
+              <option value="">Select User</option>
+              {users.map((user) => (
+                <option key={user._id} value={user.name}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+            {errors.assignedTo && (
+              <p className="text-red-500 text-sm mt-1">{errors.assignedTo}</p>
+            )}
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+            >
+              {editMode ? "Update Task" : "Add Task"}
+            </button>
+            <button
+              type="button"
+              className="ml-2 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 transition duration-300"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       )}
     </div>
-    <div>
-      <label className="block mb-2 font-semibold">Description</label>
-      <textarea
-        name="description"
-        value={newTask.description}
-        onChange={handleChange}
-        className={`w-full px-4 py-2 border rounded ${
-          errors.description ? "border-red-500" : "border-gray-300"
-        }`}
-        required
-      />
-      {errors.description && (
-        <p className="text-red-500 text-sm mt-1">{errors.description}</p>
-      )}
-    </div>
-    <div className="grid grid-cols-2 gap-4">
-      <div>
-        <label className="block mb-2 font-semibold">Status</label>
-        <select
-          name="status"
-          value={newTask.status}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border rounded border-gray-300"
-          required
-        >
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
-          <option value="Not Started">Not Started</option>
-        </select>
-      </div>
-      <div>
-        <label className="block mb-2 font-semibold">Priority</label>
-        <select
-          name="priority"
-          value={newTask.priority}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border rounded border-gray-300"
-          required
-        >
-          <option value="High">High</option>
-          <option value="Medium">Medium</option>
-          <option value="Low">Low</option>
-        </select>
-      </div>
-    </div>
-    <div>
-      <label className="block mb-2 font-semibold">Due Date</label>
-      <input
-        type="date"
-        name="dueDate"
-        value={newTask.dueDate}
-        onChange={handleChange}
-        className={`w-full px-4 py-2 border rounded ${
-          errors.dueDate ? "border-red-500" : "border-gray-300"
-        }`}
-        required
-      />
-      {errors.dueDate && (
-        <p className="text-red-500 text-sm mt-1">{errors.dueDate}</p>
-      )}
-    </div>
-    <div>
-      <label className="block mb-2 font-semibold">Assigned To</label>
-      <select
-        name="assignedTo"
-        value={newTask.assignedTo}
-        onChange={handleChange}
-        className={`w-full px-4 py-2 border rounded ${
-          errors.assignedTo ? "border-red-500" : "border-gray-300"
-        }`}
-        required
-      >
-        <option value="">Select User</option>
-        {users.map((user) => (
-          <option key={user._id} value={user.name}>
-            {user.name}
-          </option>
-        ))}
-      </select>
-      {errors.assignedTo && (
-        <p className="text-red-500 text-sm mt-1">{errors.assignedTo}</p>
-      )}
-    </div>
-    <div className="flex justify-end">
-      <button
-        type="submit"
-        className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
-      >
-        {editMode ? "Update Task" : "Add Task"}
-      </button>
-      <button
-        type="button"
-        className="ml-2 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 transition duration-300"
-        onClick={onClose}
-      >
-        Cancel
-      </button>
-    </div>
-  </form>
-);
+  );
+};
 
 function Home() {
   const [tasks, setTasks] = useState([]);
@@ -161,7 +347,9 @@ function Home() {
   const [statusFilter, setStatusFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [assigneeFilter, setAssigneeFilter] = useState("");
+  const [projectFilter, setProjectFilter] = useState(""); // Add project filter state
   const [users, setUsers] = useState([]);
+  const [projects, setProjects] = useState([]); // Add projects state
   const [errors, setErrors] = useState({
     title: "",
     description: "",
@@ -199,6 +387,18 @@ function Home() {
     };
 
     getUsers();
+  }, [token]);
+  useEffect(() => {
+    const getProjects = async () => {
+      try {
+        const data = await getProjectsAll(token); // Fetch the projects data
+        setProjects(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    getProjects();
   }, [token]);
 
   const handleChange = (e) => {
@@ -276,6 +476,7 @@ function Home() {
         priority: "High",
         dueDate: "",
         assignedTo: "",
+        project: "", // Reset project field
       });
       setIsModalVisible(false);
       setEditMode(false);
@@ -326,7 +527,8 @@ function Home() {
       task.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (statusFilter ? task.status === statusFilter : true) &&
       (priorityFilter ? task.priority === priorityFilter : true) &&
-      (assigneeFilter ? task.assignedTo === assigneeFilter : true)
+      (assigneeFilter ? task.assignedTo === assigneeFilter : true) &&
+      (projectFilter ? task.project === projectFilter : true)
     );
   });
 
@@ -381,11 +583,13 @@ function Home() {
               <TaskForm
                 newTask={newTask}
                 handleChange={handleChange}
+                projects={projects}
                 handleSubmit={handleSubmit}
                 errors={errors}
                 users={users}
                 onClose={() => setIsModalVisible(false)}
                 editMode={editMode}
+                token={token}
               />
             </Modal>
           </animated.div>
@@ -410,6 +614,18 @@ function Home() {
             <option value="In Progress">In Progress</option>
             <option value="Completed">Completed</option>
             <option value="Not Started">Not Started</option>
+          </select>
+          <select
+            value={projectFilter}
+            onChange={(e) => setProjectFilter(e.target.value)}
+            className="px-4 py-2 border rounded"
+          >
+            <option value="">All Projects</option>
+            {projects.map((project) => (
+              <option key={project._id} value={project._id}>
+                {project.name}
+              </option>
+            ))}
           </select>
           <select
             name="priority"
@@ -463,6 +679,13 @@ function Home() {
                 </p>
                 <p className="text-sm text-gray-500 mt-1">
                   Assigned to: {task.assignedTo}
+                </p>
+                <p>
+                  Project:{" "}
+                  {
+                    projects.find((project) => project._id === task.project)
+                      ?.name
+                  }
                 </p>
                 <div className="flex justify-end space-x-2 mt-4">
                   <button
